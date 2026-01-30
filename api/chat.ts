@@ -1,5 +1,5 @@
-import { resumeKnowledge, resumePromptContext } from './resumeData'
-import { buildMockAnswer } from './hrAssistant'
+import { resumeKnowledge, resumePromptContext } from './resumeData.js'
+import { buildMockAnswer } from './hrAssistant.js'
 
 export const config = { runtime: 'nodejs', maxDuration: 60 }
 

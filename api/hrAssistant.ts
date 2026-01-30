@@ -1,4 +1,4 @@
-import { resumeKnowledge } from './resumeData'
+import { resumeKnowledge } from './resumeData.js'
 
 export function buildMockAnswer(question: string, redactContact: boolean) {
   const q = question.toLowerCase()
