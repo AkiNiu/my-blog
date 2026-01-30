@@ -1,10 +1,4 @@
 {
-  "version": 2,
-  "functions": {
-    "api/chat.ts": {
-      "includeFiles": ["src/**"]
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
