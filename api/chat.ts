@@ -1,11 +1,30 @@
-import { resumePromptContext, resumeKnowledge } from '../src/data/resumeKnowledge'
-import { buildMockAnswer } from '../src/lib/hrAssistant'
-
 export const config = { runtime: 'nodejs', maxDuration: 60 }
 
 type ChatMessage = {
   role: 'system' | 'user' | 'assistant'
   content: string
+}
+
+type ResumeDeps = {
+  resumeKnowledge: any
+  resumePromptContext: string
+  buildMockAnswer: (question: string, redactContact: boolean) => string
+}
+
+async function getDeps(): Promise<ResumeDeps> {
+  const g: any = globalThis as any
+  if (g.__resumeDeps) return g.__resumeDeps as ResumeDeps
+
+  const dataMod = await import('../src/data/resumeKnowledge')
+  const hrMod = await import('../src/lib/hrAssistant')
+
+  const deps: ResumeDeps = {
+    resumeKnowledge: (dataMod as any).resumeKnowledge,
+    resumePromptContext: (dataMod as any).resumePromptContext,
+    buildMockAnswer: (hrMod as any).buildMockAnswer,
+  }
+  g.__resumeDeps = deps
+  return deps
 }
 
 function json(res: any, status: number, data: unknown) {
@@ -51,7 +70,8 @@ function clampText(s: unknown, maxLen: number) {
   return s.length > maxLen ? s.slice(0, maxLen) : s
 }
 
-function buildSystemPrompt(redactContact: boolean) {
+function buildSystemPrompt(redactContact: boolean, deps: ResumeDeps) {
+  const { resumeKnowledge, resumePromptContext } = deps
   const contactLine = redactContact
     ? '注意：不要输出候选人的手机号/邮箱等联系方式；若用户明确索要，请说明“默认开启脱敏”，引导其关闭脱敏后再询问。'
     : `联系方式（仅在用户明确索要时输出）：电话 ${resumeKnowledge.contact.phone}，邮箱 ${resumeKnowledge.contact.email}。`
@@ -126,13 +146,21 @@ export default async function handler(req: any, res: any) {
     return
   }
 
+  let deps: ResumeDeps
+  try {
+    deps = await getDeps()
+  } catch {
+    json(res, 500, { error: 'Server initialization failed' })
+    return
+  }
+
   const apiKey = process.env.LLM_API_KEY
   const model = process.env.LLM_MODEL || 'gpt-4o-mini'
   const baseUrl = (process.env.LLM_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '')
 
   if (!apiKey) {
     const lastUser = messages[messages.length - 1]?.content || ''
-    const reply = buildMockAnswer(lastUser, redactContact)
+    const reply = deps.buildMockAnswer(lastUser, redactContact)
     if (wantStream) {
       res.statusCode = 200
       res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
@@ -154,7 +182,7 @@ export default async function handler(req: any, res: any) {
     return
   }
 
-  const systemPrompt = buildSystemPrompt(redactContact)
+  const systemPrompt = buildSystemPrompt(redactContact, deps)
   const payload = {
     model,
     temperature: 0.2,
