@@ -149,8 +149,8 @@ export default async function handler(req: any, res: any) {
   let deps: ResumeDeps
   try {
     deps = await getDeps()
-  } catch {
-    json(res, 500, { error: 'Server initialization failed' })
+  } catch (e: any) {
+    json(res, 500, { error: 'Server initialization failed', detail: String(e?.message || e).slice(0, 400) })
     return
   }
 
