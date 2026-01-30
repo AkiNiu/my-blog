@@ -188,18 +188,40 @@ export default async function handler(req: any, res: any) {
 
   let upstream: Response
   try {
-    upstream = await fetchWithTimeoutRetry(
-      `${baseUrl}/chat/completions`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
+    const candidates = (() => {
+      const list: string[] = []
+      const add = (m: string) => {
+        if (!m) return
+        if (list.includes(m)) return
+        list.push(m)
+      }
+      add(model)
+      if (baseUrl.includes('generativelanguage.googleapis.com')) {
+        add('gemini-2.0-flash')
+        add('gemini-3-flash-preview')
+        add('gemini-1.5-flash')
+      }
+      return list
+    })()
+
+    let last: Response | null = null
+    for (const m of candidates) {
+      const nextPayload = { ...payload, model: m }
+      last = await fetchWithTimeoutRetry(
+        `${baseUrl}/chat/completions`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify(nextPayload),
         },
-        body: JSON.stringify(payload),
-      },
-      { timeoutMs: wantStream ? 30000 : 20000, maxRetries: 1 }
-    )
+        { timeoutMs: wantStream ? 30000 : 20000, maxRetries: 1 }
+      )
+      if (last.status !== 404) break
+    }
+    upstream = last as Response
   } catch {
     json(res, 502, { error: 'Failed to reach LLM upstream' })
     return
