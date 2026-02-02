@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Siamese Cat Head Outline -->
+  <path d="M16 26C21 26 25 21 25 15C25 10 21 6 16 6C11 6 7 10 7 15C7 21 11 26 16 26Z" stroke="#333" stroke-width="1.5"/>
+  <!-- Siamese Face Mask (Dark Point) -->
+  <path d="M16 22C19 22 21 19 21 15C21 11 19 8 16 8C13 8 11 11 11 15C11 19 13 22 16 22Z" fill="#5D4037" opacity="0.8"/>
+  <!-- Ears -->
+  <path d="M9 10L4 4L11 8" stroke="#333" stroke-width="1.5" fill="#5D4037"/>
+  <path d="M23 10L28 4L21 8" stroke="#333" stroke-width="1.5" fill="#5D4037"/>
+  <!-- Eyes -->
+  <circle cx="14" cy="14" r="1" fill="#4FC3F7"/>
+  <circle cx="18" cy="14" r="1" fill="#4FC3F7"/>
+  <!-- Nose -->
+  <path d="M15.5 17L16.5 17L16 18Z" fill="#333"/>
+</svg>
