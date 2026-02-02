@@ -1,14 +1,42 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Siamese Cat Head Outline -->
-  <path d="M16 26C21 26 25 21 25 15C25 10 21 6 16 6C11 6 7 10 7 15C7 21 11 26 16 26Z" stroke="#333" stroke-width="1.5"/>
-  <!-- Siamese Face Mask (Dark Point) -->
-  <path d="M16 22C19 22 21 19 21 15C21 11 19 8 16 8C13 8 11 11 11 15C11 19 13 22 16 22Z" fill="#5D4037" opacity="0.8"/>
-  <!-- Ears -->
-  <path d="M9 10L4 4L11 8" stroke="#333" stroke-width="1.5" fill="#5D4037"/>
-  <path d="M23 10L28 4L21 8" stroke="#333" stroke-width="1.5" fill="#5D4037"/>
-  <!-- Eyes -->
-  <circle cx="14" cy="14" r="1" fill="#4FC3F7"/>
-  <circle cx="18" cy="14" r="1" fill="#4FC3F7"/>
-  <!-- Nose -->
-  <path d="M15.5 17L16.5 17L16 18Z" fill="#333"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="#E8DCCC" />
+  
+  <!-- Ears: Adjusted to be more triangular and cat-like, less sheep-like -->
+  <!-- Left Ear -->
+  <path d="M18 20L12 8C12 8 20 8 24 16" fill="#4A3B2F" stroke="#4A3B2F" stroke-width="3" stroke-linejoin="round"/>
+  <!-- Right Ear -->
+  <path d="M46 20L52 8C52 8 44 8 40 16" fill="#4A3B2F" stroke="#4A3B2F" stroke-width="3" stroke-linejoin="round"/>
+  
+  <!-- Head Group -->
+  <g transform="translate(0, 2)">
+      <!-- Face -->
+      <circle cx="32" cy="32" r="22" fill="#FFF8F0"/>
+      
+      <!-- Mask -->
+      <defs>
+        <radialGradient id="maskGradient" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(32 32) rotate(90) scale(16 22)">
+          <stop stop-color="#5D4A3A"/>
+          <stop offset="1" stop-color="#4A3B2F"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="32" cy="34" rx="18" ry="14" fill="url(#maskGradient)"/>
+      
+      <!-- Eyes -->
+      <ellipse cx="25" cy="32" rx="3.5" ry="4.5" fill="#89CFF0"/>
+      <ellipse cx="39" cy="32" rx="3.5" ry="4.5" fill="#89CFF0"/>
+      
+      <!-- Pupils -->
+      <circle cx="25" cy="32" r="1.5" fill="#1A1A1A"/>
+      <circle cx="39" cy="32" r="1.5" fill="#1A1A1A"/>
+      
+      <!-- Nose -->
+      <path d="M30 40Q32 42 34 40H30Z" fill="#FFAAAA"/>
+      
+      <!-- Whiskers -->
+      <path d="M14 36H8" stroke="#5D4A3A" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <path d="M12 40H6" stroke="#5D4A3A" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <path d="M50 36H56" stroke="#5D4A3A" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <path d="M52 40H58" stroke="#5D4A3A" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+  </g>
 </svg>

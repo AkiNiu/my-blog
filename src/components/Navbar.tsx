@@ -22,40 +22,39 @@ export default function Navbar() {
 
   return (
     <>
-      <nav 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled || mobileMenuOpen 
-            ? 'bg-background/80 backdrop-blur-xl border-b border-border/40 py-4' 
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled || mobileMenuOpen
+            ? 'bg-background/80 backdrop-blur-xl border-b border-border/40 py-4'
             : 'bg-transparent py-6'
-        }`}
+          }`}
       >
         <div className="container max-w-6xl mx-auto px-6 flex items-center justify-between">
           <a href="#" className="text-lg font-semibold tracking-tight text-foreground">
-            刘生杰
+            AkiLiu
           </a>
-          
+
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
             {items.map(i => (
-              <a 
-                key={i.href} 
-                href={i.href} 
+              <a
+                key={i.href}
+                href={i.href}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 {i.label}
               </a>
             ))}
-            <a 
-                href="resume.pdf" 
-                download 
-                className="ml-4 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+            <a
+              href="resume.pdf"
+              download
+              className="ml-4 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
             >
-                下载简历 / Resume
+              下载简历 / Resume
             </a>
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden p-2 text-foreground"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -69,22 +68,22 @@ export default function Navbar() {
         <div className="fixed inset-0 z-40 bg-background pt-24 px-6 md:hidden">
           <div className="flex flex-col gap-6 text-center">
             {items.map(i => (
-              <a 
-                key={i.href} 
-                href={i.href} 
+              <a
+                key={i.href}
+                href={i.href}
                 className="text-2xl font-medium text-foreground"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {i.label}
               </a>
             ))}
-             <a 
-                href="resume.pdf" 
-                download 
-                className="mt-4 px-6 py-3 rounded-full bg-primary text-primary-foreground text-lg font-medium inline-block"
-                onClick={() => setMobileMenuOpen(false)}
+            <a
+              href="resume.pdf"
+              download
+              className="mt-4 px-6 py-3 rounded-full bg-primary text-primary-foreground text-lg font-medium inline-block"
+              onClick={() => setMobileMenuOpen(false)}
             >
-                下载简历 / Download Resume
+              下载简历 / Download Resume
             </a>
           </div>
         </div>

@@ -70,7 +70,7 @@ export type ResumeMaterial = {
 
 export const resumeKnowledge = {
   profile: {
-    name: '刘生杰',
+    name: 'AkiLiu',
     headline: 'Engineer-Turned AI Product Manager',
     location: '南京',
     extra: '211 硕士（东华大学）· 复杂系统与数据分析 · 全栈落地能力',
@@ -89,7 +89,6 @@ export const resumeKnowledge = {
     salary: '14–18K（可谈）',
   } satisfies ResumePreferences,
   links: [
-    { label: '下载简历 PDF', url: 'resume.pdf' },
     { label: '作品集（方案PPT/原型/视频）', note: '按面试阶段提供：初轮仅概要与脱敏材料' },
     { label: 'GitHub（可选）', note: '默认不公开，面试阶段可按需提供' },
     { label: '小红书（可选）', note: '默认不公开，面试阶段可按需提供' },
@@ -101,23 +100,23 @@ export const resumeKnowledge = {
     '复杂系统建模：擅长把复杂业务拆解为可落地的数据结构与流程规则，适配 B 端场景',
   ],
   publications: [
-    { 
-       type: '论文', 
-       language: '英文', 
-       title: 'Effect of weft binding structure on compressive properties...', 
-       note: 'WoS 收录 · 探究结构变量对性能影响（数据相关性分析与实验设计能力）' 
-     },
-    { 
-      type: '论文', 
-      language: '中文', 
-      title: '纬向V形机织间隔复合材料压缩性能有限元分析', 
-      note: '北大核心 · 复杂物理系统的数值仿真与建模（有限元分析/仿真逻辑）' 
+    {
+      type: '论文',
+      language: '英文',
+      title: 'Effect of weft binding structure on compressive properties...',
+      note: 'WoS 收录 · 探究结构变量对性能影响（数据相关性分析与实验设计能力）'
     },
-    { 
-      type: '专利', 
-      language: '中文', 
-      title: '一种高抗压机织间隔织物及其复合材料连续化制备方法', 
-      note: '发明专利（已授权） · 涉及工艺流程的标准化与连续化设计（工程落地思维）' 
+    {
+      type: '论文',
+      language: '中文',
+      title: '纬向V形机织间隔复合材料压缩性能有限元分析',
+      note: '北大核心 · 复杂物理系统的数值仿真与建模（有限元分析/仿真逻辑）'
+    },
+    {
+      type: '专利',
+      language: '中文',
+      title: '一种高抗压机织间隔织物及其复合材料连续化制备方法',
+      note: '发明专利（已授权） · 涉及工艺流程的标准化与连续化设计（工程落地思维）'
     },
   ] as ResumePublication[],
   experience: [
@@ -265,6 +264,7 @@ export const resumeKnowledge = {
   ] satisfies ResumeEducation[],
   awards: [
     '2024-2025连续2年被评为公司明星员工',
+    '2021-2023 硕士研究生学业二等奖学金',
     '2022 硕士研究生学业二等奖学金',
     '2017 校长二等奖学金',
     '2016 校长三等奖学金',

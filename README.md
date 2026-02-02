@@ -4,6 +4,9 @@
 
 ## 本地运行
 
+> [!IMPORTANT]
+> 请确保在 `resume` 子目录下执行以下命令（即当前终端需处于 `d:/resume/resume`）。
+
 ```bash
 npm ci
 npm run dev
