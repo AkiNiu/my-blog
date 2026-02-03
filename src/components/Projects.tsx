@@ -74,9 +74,14 @@ export default function Projects() {
 
               <div className="p-5 flex-grow flex flex-col">
                 {/* Impact Statement - Fixed Height for Alignment */}
-                <div className="mb-4 bg-secondary/20 rounded-lg p-3 border border-border/30 min-h-[5.5rem]">
-                  <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Business Impact</div>
-                  <div className="text-xs font-medium text-foreground leading-relaxed line-clamp-3">
+                {/* Impact Statement - Highlighted for HR */}
+                <div className="mb-4 bg-primary/5 rounded-lg p-4 border border-primary/10 min-h-[5.5rem] relative overflow-hidden group-hover:bg-primary/10 transition-colors">
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/10 to-transparent -mr-8 -mt-8 rounded-full blur-xl pointer-events-none"></div>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <BarChart3 size={14} className="text-primary" />
+                    <div className="text-[11px] font-bold text-primary uppercase tracking-wider">Business Impact / 商业价值</div>
+                  </div>
+                  <div className="text-sm font-semibold text-foreground leading-relaxed line-clamp-3">
                     {p.result}
                   </div>
                 </div>

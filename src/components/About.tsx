@@ -45,8 +45,12 @@ export default function About() {
           </div>
           <ul className="space-y-4">
             {strengths.map((s, idx) => (
-              <li key={idx} className="text-sm text-foreground/80 leading-relaxed flex items-start gap-3">
-                <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/60 shrink-0 shadow-sm" />
+              <li key={idx} className="text-sm text-foreground/90 leading-relaxed flex items-start gap-3">
+                <div className="mt-1 h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary">
+                  <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
                 <span>{s}</span>
               </li>
             ))}
@@ -112,8 +116,8 @@ export default function About() {
             <div key={idx} className="rounded-xl bg-secondary/20 p-4 border border-border/20 flex flex-col h-full">
               <div className="flex items-center gap-2 mb-2">
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${p.type === '发明专利'
-                    ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
-                    : 'bg-primary/10 text-primary'
+                  ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
+                  : 'bg-primary/10 text-primary'
                   }`}>
                   {p.type}
                 </span>

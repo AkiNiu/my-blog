@@ -26,7 +26,7 @@ export function buildMockAnswer(question: string, redactContact: boolean) {
 
   if (q.includes('亮点') || q.includes('优势') || q.includes('为什么你')) {
     return [
-      `结论：${profile.name} 的优势是“AI Native + 复杂系统建模 + B 端落地”。`,
+      `结论：${profile.name} 的优势是“AI 落地能力 + 工程化思维 + 商业价值交付”。`,
       '',
       '要点：',
       ...resumeKnowledge.strengths.map((s) => `- ${s}`),

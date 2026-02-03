@@ -67,16 +67,16 @@ export default function Hero() {
 
       <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto mb-12 w-full px-4">
         <div className="text-center">
-          <div className="text-3xl md:text-4xl font-bold text-foreground">95%</div>
-          <div className="text-xs md:text-sm text-muted-foreground mt-1">诊断准确率目标</div>
+          <div className="text-3xl md:text-4xl font-bold text-foreground">2年+</div>
+          <div className="text-xs md:text-sm text-muted-foreground mt-1">业务+产品经验</div>
         </div>
         <div className="text-center border-l border-r border-border/40">
-          <div className="text-3xl md:text-4xl font-bold text-foreground">50w+</div>
-          <div className="text-xs md:text-sm text-muted-foreground mt-1">沉淀缺陷案例库</div>
+          <div className="text-3xl md:text-4xl font-bold text-foreground">211</div>
+          <div className="text-xs md:text-sm text-muted-foreground mt-1">东华大学·工学硕士</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl md:text-4xl font-bold text-foreground">100%</div>
-          <div className="text-xs md:text-sm text-muted-foreground mt-1">方案评审通过率</div>
+          <div className="text-3xl md:text-4xl font-bold text-foreground">5+</div>
+          <div className="text-xs md:text-sm text-muted-foreground mt-1">完整项目经历</div>
         </div>
       </div>
 
