@@ -2,7 +2,7 @@ import { resumeKnowledge } from '../data/resumeKnowledge'
 
 export function buildMockAnswer(question: string, redactContact: boolean) {
   const q = question.toLowerCase()
-  const { profile, contact, projects, experience, achievements, skills, education } = resumeKnowledge
+  const { profile, contact, projects, experience, skills, education } = resumeKnowledge
 
   if ((q.includes('电话') || q.includes('手机号') || q.includes('邮箱') || q.includes('联系方式')) && redactContact) {
     return '为保护隐私，当前对话默认不输出联系方式。若你需要联系方式，请在窗口右上角关闭“脱敏”后再询问。'
@@ -37,17 +37,13 @@ export function buildMockAnswer(question: string, redactContact: boolean) {
     return ['技能与工具：', ...skills.map((s) => `- ${s}`)].join('\n')
   }
 
-  if (q.includes('成果') || q.includes('量化') || q.includes('指标')) {
-    return ['量化成果：', ...achievements.map((a) => `- ${a.label}：${a.value}`)].join('\n')
-  }
-
   if (q.includes('教育') || q.includes('学历') || q.includes('学校')) {
     return ['教育背景：', ...education.map((e) => `- ${e.school}｜${e.degree}｜${e.time}`)].join('\n')
   }
 
   return [
     '我可以基于简历回答 HR 关注的问题。',
-    '你可以问：亮点总结 / 项目深挖 / 与岗位匹配点 / 可量化成果 / 工作经历细节。',
+    '你可以问：亮点总结 / 项目深挖 / 与岗位匹配点 / 工作经历细节。',
   ].join('\n')
 }
 

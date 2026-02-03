@@ -22,11 +22,6 @@ export type ResumeEducation = {
   detail: string
 }
 
-export type ResumeAchievement = {
-  label: string
-  value: string
-}
-
 export type ResumeLink = {
   label: string
   url?: string
@@ -243,11 +238,6 @@ export const resumeKnowledge = {
     'Excel/PowerPoint/Word',
     '项目协调',
   ],
-  achievements: [
-    { label: '评审一次通过率', value: '80%（原型）/ 100%（驾驶舱）' },
-    { label: '输出产物', value: '6张高保真原型、10份文档（PRD/可研）' },
-    { label: '调研沉淀', value: '30+用户故事、6次深访、10+小时录音' },
-  ] satisfies ResumeAchievement[],
   education: [
     {
       school: '东华大学',
@@ -295,9 +285,5 @@ export const resumePromptContext = `
 - 2023.10-至今 南京康乐电力 研发部 产品经理：检E通3.0/2.0、低压通，涉及多模态诊断、健康度模型、数据治理、防伪证据链、驾驶舱、知识图谱/案例库等
 - 2019.05-2021.08 江苏古田化工/舜天服饰：ERP流程标准化、BOM与生产数据结构化管理
 
-量化成果：
-- 评审一次通过率：80%（原型）/ 100%（驾驶舱）
-- 输出产物：6张高保真原型、10份文档（PRD/可研）
-- 调研沉淀：30+用户故事、6次深访、10+小时录音
 `.trim()
 

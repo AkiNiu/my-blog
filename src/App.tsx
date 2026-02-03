@@ -5,7 +5,6 @@ import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
-import Achievements from './components/Achievements';
 import Education from './components/Education';
 import HRChatWidget from './components/HRChatWidget';
 import About from './components/About';
@@ -38,10 +37,6 @@ function App() {
                         <Skills />
                     </section>
 
-                    <section id="achievements" className="scroll-mt-24">
-                        <SectionTitle id="achievements" title="量化成果" subtitle="Achievements" />
-                        <Achievements />
-                    </section>
 
                     <section id="education" className="scroll-mt-24">
                         <SectionTitle id="education" title="教育与科研" subtitle="Education" />
