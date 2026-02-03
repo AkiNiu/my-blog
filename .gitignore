@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Environment Variables (CRITICAL: prevent API key leakage)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -29,3 +36,4 @@ dist-ssr
 学校经历/
 工作经历/
 个人项目/
+����׼��/

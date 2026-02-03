@@ -111,7 +111,12 @@ export default function About() {
           {publications.map((p, idx) => (
             <div key={idx} className="rounded-xl bg-secondary/20 p-4 border border-border/20 flex flex-col h-full">
               <div className="flex items-center gap-2 mb-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-primary/10 text-primary tracking-wide">{p.type}</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${p.type === '发明专利'
+                    ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
+                    : 'bg-primary/10 text-primary'
+                  }`}>
+                  {p.type}
+                </span>
                 <span className="text-xs text-muted-foreground">{p.language}{p.year ? ` · ${p.year}` : ''}</span>
               </div>
 

@@ -96,18 +96,18 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
 
             {/* Toolbar */}
             <div className="bg-[#f9f9f9] dark:bg-[#252525] border-b border-gray-300 dark:border-black/20 p-2 flex items-center justify-between">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                     <button
                         onClick={runPipeline}
                         disabled={isRunning}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-white shadow-sm transition-all ${isRunning ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 active:translate-y-0.5'}`}
+                        className={`flex-1 sm:flex-none justify-center flex items-center gap-1.5 px-3 py-1.5 rounded-md text-white shadow-sm transition-all ${isRunning ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 active:translate-y-0.5'}`}
                     >
                         {isRunning ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} fill="currentColor" />}
                         <span>一键全流程处理</span>
                     </button>
                     <span className="text-gray-400 text-xs hidden sm:inline-block">（自动执行：解压 -&gt; 清洗 -&gt; 过滤 -&gt; 报告）</span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-white dark:bg-[#1e1e1e] px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
+                <div className="hidden sm:flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 bg-white dark:bg-[#1e1e1e] px-2 py-1 rounded border border-gray-300 dark:border-gray-600">
                     <FolderOpen size={12} />
                     <span>工作区: D:/Projects/Jiangsu_Bidding_Data</span>
                 </div>
@@ -116,10 +116,10 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
             {/* Main Content Area */}
             <div className="flex-1 flex overflow-hidden">
                 {/* Main Interface */}
-                <div className="flex-1 flex flex-col p-3 gap-3 overflow-hidden">
+                <div className="flex-1 flex flex-col p-2 sm:p-3 gap-3 overflow-hidden">
 
                     {/* Tabs */}
-                    <div className="flex items-end gap-1 border-b border-gray-300 dark:border-gray-600 px-1">
+                    <div className="flex items-end gap-1 border-b border-gray-300 dark:border-gray-600 px-1 overflow-x-auto scrollbar-none">
                         {[
                             { id: 'tender', label: '1. 招标数据处理', icon: FileText },
                             { id: 'award', label: '2. 中标数据处理', icon: CheckCircle2 },
@@ -129,7 +129,7 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-t-lg transition-colors text-xs font-medium border-t border-l border-r ${activeTab === tab.id
+                                className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-t-lg transition-colors text-xs font-medium border-t border-l border-r whitespace-nowrap ${activeTab === tab.id
                                     ? 'bg-white dark:bg-[#1e1e1e] border-gray-300 dark:border-gray-600 border-b-white dark:border-b-[#1e1e1e] text-blue-600 dark:text-blue-400 relative top-[1px]'
                                     : 'bg-gray-100 dark:bg-[#252525] border-transparent text-gray-500 hover:text-gray-700'
                                     }`}
@@ -141,16 +141,16 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
                     </div>
 
                     {/* Tab Content */}
-                    <div className="flex-1 bg-white dark:bg-[#1e1e1e] border border-gray-300 dark:border-gray-600 rounded-b-lg rounded-tr-lg p-4 overflow-y-auto">
+                    <div className="flex-1 bg-white dark:bg-[#1e1e1e] border border-gray-300 dark:border-gray-600 rounded-b-lg rounded-tr-lg p-3 sm:p-4 overflow-y-auto">
                         {activeTab === 'tender' && (
-                            <div className="space-y-6">
+                            <div className="space-y-4 sm:space-y-6">
                                 {/* Group 1 */}
                                 <fieldset className="border border-gray-200 dark:border-gray-700 rounded p-3 relative">
                                     <legend className="text-xs px-1 text-blue-600 font-semibold bg-white dark:bg-[#1e1e1e] ml-2">1. 压缩包处理</legend>
-                                    <div className="flex flex-wrap gap-4 mb-3">
-                                        <button className="btn-secondary"><FolderOpen size={20} className="mb-1 text-yellow-500" /> 导入压缩包</button>
-                                        <button className="btn-secondary"><Play size={20} className="mb-1 text-green-500" /> 提取压缩包</button>
-                                        <button className="btn-secondary"><CheckCircle2 size={20} className="mb-1 text-blue-500" /> 检查状态</button>
+                                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 mb-3">
+                                        <button className="btn-secondary"><FolderOpen size={20} className="sm:mb-1 text-yellow-500" /> 导入压缩包</button>
+                                        <button className="btn-secondary"><Play size={20} className="sm:mb-1 text-green-500" /> 提取压缩包</button>
+                                        <button className="btn-secondary"><CheckCircle2 size={20} className="sm:mb-1 text-blue-500" /> 检查状态</button>
                                     </div>
                                     <div className="bg-white border inset-border h-24 p-2 overflow-y-auto text-xs font-mono">
                                         <div className="text-green-600">[已处理] 2024-Jiangsu-Tender-Batch-01.zip</div>
@@ -163,21 +163,21 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
                                 {/* Group 2 */}
                                 <fieldset className="border border-gray-200 dark:border-gray-700 rounded p-3 relative">
                                     <legend className="text-xs px-1 text-blue-600 font-semibold bg-white dark:bg-[#1e1e1e] ml-2">2. Excel数据处理</legend>
-                                    <div className="flex flex-wrap gap-4 mb-2">
+                                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 mb-2">
                                         <button className="btn-secondary">
-                                            <FileSpreadsheet size={20} className="mb-1 text-green-600" />
+                                            <FileSpreadsheet size={20} className="sm:mb-1 text-green-600" />
                                             Excel转CSV
                                         </button>
                                         <button className="btn-secondary">
-                                            <Filter size={20} className="mb-1 text-blue-600" />
+                                            <Filter size={20} className="sm:mb-1 text-blue-600" />
                                             过滤与合并
                                         </button>
                                         <button className="btn-secondary">
-                                            <Table size={20} className="mb-1 text-purple-600" />
+                                            <Table size={20} className="sm:mb-1 text-purple-600" />
                                             查看合并结果
                                         </button>
                                         <button className="btn-secondary">
-                                            <Settings size={20} className="mb-1 text-gray-600" />
+                                            <Settings size={20} className="sm:mb-1 text-gray-600" />
                                             配置规则
                                         </button>
                                     </div>
@@ -189,13 +189,13 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
                             <div className="space-y-6">
                                 <fieldset className="border border-gray-200 dark:border-gray-700 rounded p-3 relative">
                                     <legend className="text-xs px-1 text-blue-600 font-semibold bg-white dark:bg-[#1e1e1e] ml-2">1. PDF预处理</legend>
-                                    <div className="flex flex-wrap gap-4 mb-2">
+                                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 mb-2">
                                         <button className="btn-secondary">
-                                            <FileUp size={20} className="mb-1 text-orange-500" />
+                                            <FileUp size={20} className="sm:mb-1 text-orange-500" />
                                             导入中标PDF
                                         </button>
                                         <button className="btn-secondary">
-                                            <FilePenLine size={20} className="mb-1 text-blue-500" />
+                                            <FilePenLine size={20} className="sm:mb-1 text-blue-500" />
                                             PDF重命名
                                         </button>
                                     </div>
@@ -208,7 +208,7 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
 
                         {activeTab === 'analysis' && (
                             <div className="space-y-6">
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded border border-blue-100 dark:border-blue-900 flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:shadow-md transition-shadow">
                                         <BarChart3 size={32} className="text-blue-600" />
                                         <div className="font-semibold text-gray-800 dark:text-gray-200">生成数据仪表盘</div>
@@ -233,7 +233,7 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
                     </div>
 
                     {/* Console Output */}
-                    <div className="h-40 bg-[#1e1e1e] text-gray-300 font-mono text-xs rounded-lg flex flex-col overflow-hidden shadow-inner border border-gray-600">
+                    <div className="h-32 sm:h-40 bg-[#1e1e1e] text-gray-300 font-mono text-xs rounded-lg flex flex-col overflow-hidden shadow-inner border border-gray-600 shrink-0">
                         <div className="bg-[#2d2d2d] px-2 py-1 text-[10px] text-gray-500 flex justify-between items-center border-b border-black/40">
                             <span className="flex items-center gap-1"><Terminal size={10} /> 执行日志</span>
                             <button title="Clear" onClick={() => setLogs([])} className="hover:text-white"><RefreshCw size={10} /></button>
@@ -258,10 +258,18 @@ export default function DataPipelineSimulator({ onClose }: { onClose: () => void
 
             <style>{`
         .btn-secondary {
-            @apply flex flex-col items-center justify-center w-24 h-16 p-1 rounded bg-white dark:bg-[#2d2d2d] border border-transparent hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-[#333] text-gray-700 dark:text-gray-300 text-xs transition-colors active:scale-95 text-center;
+            @apply flex sm:flex-col flex-row items-center sm:justify-center justify-start gap-3 sm:gap-0 w-full sm:w-24 h-10 sm:h-16 px-3 sm:p-1 rounded bg-white dark:bg-[#2d2d2d] border border-transparent hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-[#333] text-gray-700 dark:text-gray-300 text-xs transition-colors active:scale-95 text-center;
         }
         .inset-border {
              box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+        /* Custom scrollbar hiding */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
       `}</style>
         </div>

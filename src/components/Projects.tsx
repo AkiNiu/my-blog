@@ -50,85 +50,87 @@ export default function Projects() {
 
       {/* Top 3 Projects - Featured */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {topProjects.map((p, idx) => (
-          <div key={idx} className="group flex flex-col rounded-2xl border border-border/50 bg-card p-0 overflow-hidden transition-all hover:shadow-xl hover:border-primary/20 h-full relative">
-            {/* Top Badge */}
-            <div className="absolute top-0 right-0 bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-bl-lg border-b border-l border-primary/10 z-10">
-              FEATURED
-            </div>
-
-            {/* Header Section */}
-            <div className="relative p-6 pb-4 bg-gradient-to-b from-secondary/30 to-background border-b border-border/40">
-              <div className="space-y-3">
-                <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors pr-8 min-h-[3.5rem] flex items-center">
-                  {p.name.split('·')[0]}
-                </h3>
-                <p className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                  <Zap size={12} className="text-amber-500" />
-                  {p.role}
-                </p>
+        {topProjects.map((p, idx) => {
+          const hasDemo = p.name.includes('招采数据') || p.name.includes('Our Pact')
+          return (
+            <div key={idx} className="group flex flex-col rounded-2xl border border-border/50 bg-card p-0 overflow-hidden transition-all hover:shadow-xl hover:border-primary/20 h-full relative">
+              {/* Top Badge */}
+              <div className="absolute top-0 right-0 bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-bl-lg border-b border-l border-primary/10 z-10">
+                FEATURED
               </div>
-            </div>
 
-            <div className="p-5 flex-grow flex flex-col">
-              {/* Impact Statement */}
-              <div className="mb-4 bg-secondary/20 rounded-lg p-3 border border-border/30">
-                <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Business Impact</div>
-                <div className="text-xs font-medium text-foreground leading-relaxed line-clamp-3">
-                  {p.result}
+              {/* Header Section */}
+              <div className="relative p-6 pb-4 bg-gradient-to-b from-secondary/30 to-background border-b border-border/40">
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-primary transition-colors pr-8 min-h-[3.5rem] flex items-center">
+                    {p.name.split('·')[0]}
+                  </h3>
+                  <p className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                    <Zap size={12} className="text-amber-500" />
+                    {p.role}
+                  </p>
                 </div>
               </div>
 
-              {/* Special Button for Personal Project */}
-              {p.name.includes('招采数据') && (
-                <button
-                  onClick={() => setSimulatorOpen(true)}
-                  className="mb-4 w-full flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground py-2 text-xs font-semibold shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Play size={12} fill="currentColor" />
-                  运行在线仿真 Demo
-                </button>
-              )}
-
-              {/* Special Button for Our Pact Project */}
-              {p.name.includes('Our Pact') && (
-                <button
-                  onClick={() => setOurPactOpen(true)}
-                  className="mb-4 w-full flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 text-xs font-semibold shadow-lg shadow-indigo-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Smartphone size={12} />
-                  体验产品原型 Demo
-                </button>
-              )}
-
-
-              {/* STAR Outcomes */}
-              {p.outcomes && p.outcomes.length > 0 ? (
-                <div className="space-y-2 mb-4 flex-grow">
-                  {p.outcomes.slice(0, 2).map((o, i) => (
-                    <div key={i} className="flex gap-2 text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                      <ChevronRight className="h-3 w-3 text-primary/50 shrink-0 mt-0.5" />
-                      <span className="line-clamp-2">{o}</span>
-                    </div>
-                  ))}
+              <div className="p-5 flex-grow flex flex-col">
+                {/* Impact Statement - Fixed Height for Alignment */}
+                <div className="mb-4 bg-secondary/20 rounded-lg p-3 border border-border/30 min-h-[5.5rem]">
+                  <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Business Impact</div>
+                  <div className="text-xs font-medium text-foreground leading-relaxed line-clamp-3">
+                    {p.result}
+                  </div>
                 </div>
-              ) : null}
 
-              {/* Footer: Tags */}
-              <div className="mt-auto pt-4 border-t border-border/40">
-                {p.tags && p.tags.length > 0 ? (
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.tags.slice(0, 3).map((t, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] font-medium border border-border/50">
-                        {t}
-                      </span>
+                {/* Demo Button Section - Fixed Height Area */}
+                <div className="mb-4 min-h-[36px]">
+                  {p.name.includes('招采数据') && (
+                    <button
+                      onClick={() => setSimulatorOpen(true)}
+                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground py-2 text-xs font-semibold shadow-md transition-all hover:opacity-90 active:scale-[0.98]"
+                    >
+                      <Play size={12} fill="currentColor" />
+                      运行在线仿真 Demo
+                    </button>
+                  )}
+                  {p.name.includes('Our Pact') && (
+                    <button
+                      onClick={() => setOurPactOpen(true)}
+                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground py-2 text-xs font-semibold shadow-md transition-all hover:opacity-90 active:scale-[0.98]"
+                    >
+                      <Smartphone size={12} />
+                      体验产品原型 Demo
+                    </button>
+                  )}
+                </div>
+
+                {/* STAR Outcomes */}
+                {p.outcomes && p.outcomes.length > 0 ? (
+                  <div className="space-y-2 mb-4 flex-grow">
+                    {p.outcomes.slice(0, 2).map((o, i) => (
+                      <div key={i} className="flex gap-2 text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors">
+                        <ChevronRight className="h-3 w-3 text-primary/50 shrink-0 mt-0.5" />
+                        <span className="line-clamp-2">{o}</span>
+                      </div>
                     ))}
                   </div>
                 ) : null}
+
+                {/* Footer: Tags */}
+                <div className="mt-auto pt-4 border-t border-border/40">
+                  {p.tags && p.tags.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {p.tags.slice(0, 3).map((t, i) => (
+                        <span key={i} className="px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] font-medium border border-border/50">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Other Projects - Secondary Layout */}

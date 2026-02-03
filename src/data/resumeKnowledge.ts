@@ -44,7 +44,7 @@ export type ResumePreferences = {
 export type ResumePublication = {
   title: string
   language: '中文' | '英文'
-  type: '论文' | '专利'
+  type: '论文' | '专利' | '发明专利'
   year?: string
   note?: string
   url?: string
@@ -113,10 +113,10 @@ export const resumeKnowledge = {
       note: '北大核心 · 复杂物理系统的数值仿真与建模（有限元分析/仿真逻辑）'
     },
     {
-      type: '专利',
+      type: '发明专利',
       language: '中文',
       title: '一种高抗压机织间隔织物及其复合材料连续化制备方法',
-      note: '发明专利（已授权） · 涉及工艺流程的标准化与连续化设计（工程落地思维）'
+      note: '已授权 · 涉及工艺流程的标准化与连续化设计（工程落地思维）'
     },
   ] as ResumePublication[],
   experience: [
@@ -292,7 +292,7 @@ export const resumePromptContext = `
 - 论文/专利：本科期间 2 篇论文（中/英各 1）与 1 项发明专利（名称待补充）
 
 工作经历要点：
-- 2023.10-至今 南京康乐电力 研发部 AI/智能化产品经理：检E通3.0/2.0、低压通，涉及多模态诊断、健康度模型、数据治理、防伪证据链、驾驶舱、知识图谱/案例库等
+- 2023.10-至今 南京康乐电力 研发部 产品经理：检E通3.0/2.0、低压通，涉及多模态诊断、健康度模型、数据治理、防伪证据链、驾驶舱、知识图谱/案例库等
 - 2019.05-2021.08 江苏古田化工/舜天服饰：ERP流程标准化、BOM与生产数据结构化管理
 
 量化成果：

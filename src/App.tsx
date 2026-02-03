@@ -7,7 +7,6 @@ import Skills from './components/Skills';
 import Contact from './components/Contact';
 import Achievements from './components/Achievements';
 import Education from './components/Education';
-import Awards from './components/Awards';
 import HRChatWidget from './components/HRChatWidget';
 import About from './components/About';
 
@@ -49,11 +48,6 @@ function App() {
                         <Education />
                     </section>
 
-                    <section id="awards" className="scroll-mt-24">
-                        <SectionTitle id="awards" title="获奖情况" subtitle="Awards" />
-                        <Awards />
-                    </section>
-
                     <section id="contact" className="scroll-mt-24">
                         <SectionTitle id="contact" title="联系与简历" subtitle="Contact" />
                         <Contact />
@@ -61,7 +55,7 @@ function App() {
                 </div>
 
                 <footer className="mt-32 pt-10 border-t border-border/40 text-center text-muted-foreground text-sm">
-                    <p>© 2026 AkiLiu · Designed with simplicity</p>
+                    <p>© 2026 AkiLiu · Designed with Antigravity</p>
                 </footer>
             </main>
             <HRChatWidget />

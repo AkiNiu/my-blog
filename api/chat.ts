@@ -1,5 +1,7 @@
 import { resumeKnowledge, resumePromptContext } from './resumeData.js'
 import { buildMockAnswer } from './hrAssistant.js'
+import { classifyIntent, IntentResult, getIntentLabel } from './intentRouter.js'
+import { retrieveRelevantChunks, formatChunksForPrompt } from './ragRetriever.js'
 
 export const config = { runtime: 'nodejs', maxDuration: 60 }
 
@@ -51,23 +53,86 @@ function clampText(s: unknown, maxLen: number) {
   return s.length > maxLen ? s.slice(0, maxLen) : s
 }
 
-function buildSystemPrompt(redactContact: boolean) {
+function buildBasePrompt(redactContact: boolean) {
   const contactLine = redactContact
-    ? '注意：不要输出候选人的手机号/邮箱等联系方式；若用户明确索要，请说明“默认开启脱敏”，引导其关闭脱敏后再询问。'
+    ? '注意：不要输出候选人的手机号/邮箱等联系方式；若用户明确索要，请说明"默认开启脱敏"，引导其关闭脱敏后再询问。'
     : `联系方式（仅在用户明确索要时输出）：电话 ${resumeKnowledge.contact.phone}，邮箱 ${resumeKnowledge.contact.email}。`
 
   return [
-    '你是“候选人：刘生杰”的在线简历助手，面向 HR/面试官问答。',
+    '你是"候选人：刘生杰"的在线简历助手，面向 HR/面试官问答。',
     '要求：',
-    '- 仅基于提供的简历信息，避免臆测或编造。',
-    '- 超出简历范围的问题，请回答“简历未提供该信息”，并给出可追问建议。',
-    '- 输出面向 HR 快速阅读：先结论后要点，必要时用 STAR/量化指标。',
+    '- 仅基于提供的简历信息和参考材料，避免臆测或编造。',
+    '- 超出简历范围的问题，请回答"简历未提供该信息"，并给出可追问建议。',
     '- 不要输出密钥、个人隐私；只在对方明确索要时给出联系方式。',
     contactLine,
     '',
     '【简历信息】',
     resumePromptContext,
   ].join('\n')
+}
+
+// Prompt 风格模板
+const PROMPT_STYLES = {
+  concise: `
+【输出风格】
+- 简洁要点式，不超过 5 条
+- 先结论后要点，面向 HR 快速阅读
+- 使用量化指标佐证`,
+
+  star: `
+【输出风格】
+- 使用 STAR 结构详细展开
+- S: 情境背景（项目背景/业务痛点）
+- T: 任务目标（你的职责/目标）
+- A: 采取的行动（具体做了什么）
+- R: 取得的结果（量化成果）`,
+
+  rag_enhanced: (ragContext: string) => `
+${ragContext}
+
+【输出要求】
+- 优先基于以上【相关材料】回答
+- 可引用编号如 [1][2]
+- 如材料不足，结合简历信息补充`
+}
+
+/**
+ * 构建增强版 Prompt（基于意图路由和 RAG）
+ */
+function buildEnhancedPrompt(
+  redactContact: boolean,
+  intent: IntentResult,
+  userQuestion: string
+): string {
+  const base = buildBasePrompt(redactContact)
+
+  if (intent.suggestedPromptStyle === 'concise') {
+    return base + PROMPT_STYLES.concise
+  }
+
+  if (intent.suggestedPromptStyle === 'star') {
+    return base + PROMPT_STYLES.star
+  }
+
+  if (intent.suggestedPromptStyle === 'rag_enhanced') {
+    const results = retrieveRelevantChunks(userQuestion, {
+      projectFilter: intent.projectName,
+      topK: 3,
+    })
+    const ragContext = formatChunksForPrompt(results)
+
+    if (ragContext) {
+      return base + PROMPT_STYLES.rag_enhanced(ragContext)
+    }
+    return base + PROMPT_STYLES.concise
+  }
+
+  return base + PROMPT_STYLES.concise
+}
+
+// 保留旧函数用于兼容
+function buildSystemPrompt(redactContact: boolean) {
+  return buildBasePrompt(redactContact) + PROMPT_STYLES.concise
 }
 
 async function parseBody(req: any) {
@@ -130,9 +195,15 @@ export default async function handler(req: any, res: any) {
   const model = process.env.LLM_MODEL || 'gpt-4o-mini'
   const baseUrl = (process.env.LLM_BASE_URL || 'https://api.openai.com/v1').replace(/\/$/, '')
 
+  // 🔥 意图识别 + RAG 增强
+  const lastUserMessage = messages[messages.length - 1]?.content || ''
+  const intent = classifyIntent(lastUserMessage)
+
+  // 调试日志（生产环境可移除）
+  console.log(`[Intent] ${intent.intent} (${intent.confidence}) | keywords: ${intent.matchedKeywords.join(', ')}`)
+
   if (!apiKey) {
-    const lastUser = messages[messages.length - 1]?.content || ''
-    const reply = buildMockAnswer(lastUser, redactContact)
+    const reply = buildMockAnswer(lastUserMessage, redactContact)
     if (wantStream) {
       res.statusCode = 200
       res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
@@ -144,17 +215,18 @@ export default async function handler(req: any, res: any) {
         if (event) res.write(`event: ${event}\n`)
         res.write(`data: ${typeof data === 'string' ? data : JSON.stringify(data)}\n\n`)
       }
-      write('open', { ok: true, mode: 'mock' })
+      write('open', { ok: true, mode: 'mock', intent: { type: intent.intent, label: getIntentLabel(intent.intent) } })
       write(null, { delta: reply })
       write('done', { done: true })
       res.end()
       return
     }
-    json(res, 200, { reply, mode: 'mock' })
+    json(res, 200, { reply, mode: 'mock', intent: { type: intent.intent, label: getIntentLabel(intent.intent) } })
     return
   }
 
-  const systemPrompt = buildSystemPrompt(redactContact)
+  // 使用增强版 Prompt（带意图和 RAG）
+  const systemPrompt = buildEnhancedPrompt(redactContact, intent, lastUserMessage)
   const payload = {
     model,
     temperature: 0.2,
@@ -245,13 +317,13 @@ export default async function handler(req: any, res: any) {
         status === 401
           ? { error: 'LLM unauthorized' }
           : status === 429
-          ? { error: 'LLM rate limited', retryAfterSeconds: ua ? Number(ua) || undefined : undefined }
-          : { error: 'LLM upstream error' }
+            ? { error: 'LLM rate limited', retryAfterSeconds: ua ? Number(ua) || undefined : undefined }
+            : { error: 'LLM upstream error' }
       write('error', err)
       res.end()
       return
     }
-    write('open', { ok: true })
+    write('open', { ok: true, intent: { type: intent.intent, label: getIntentLabel(intent.intent) } })
     const decoder = new TextDecoder('utf-8')
     let buffer = ''
     try {
@@ -327,5 +399,10 @@ export default async function handler(req: any, res: any) {
     reply,
     model: data?.model || model,
     usage: data?.usage,
+    intent: {
+      type: intent.intent,
+      label: getIntentLabel(intent.intent),
+      confidence: intent.confidence,
+    },
   })
 }

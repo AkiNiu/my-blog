@@ -23,6 +23,16 @@ const pptSlides = [
 // ============ 方案能力数据 ============
 const skillCards = [
     {
+        id: 'interview',
+        title: '一线访谈洞察',
+        subtitle: '定性研究',
+        description: '深度访谈提炼三大痛点：流程脱节·协作缺失·结果不可信',
+        metric: '+30-50%',
+        metricLabel: '作业时间增加',
+        icon: <Users size={18} />,
+        color: 'from-blue-500 to-indigo-600',
+    },
+    {
         id: 'goms',
         title: 'GOMS交互成本模型',
         subtitle: '定量分析',
@@ -43,16 +53,6 @@ const skillCards = [
         color: 'from-amber-500 to-orange-600',
     },
     {
-        id: 'control',
-        title: '"攻守易形"控制模型',
-        subtitle: '价值重塑',
-        description: '从弱工具到强凭证：系统报告=验收唯一凭证',
-        metric: '验收铁闸',
-        metricLabel: '核心定位',
-        icon: <Target size={18} />,
-        color: 'from-emerald-500 to-teal-600',
-    },
-    {
         id: 'business',
         title: '商业模式重构',
         subtitle: '落地方案',
@@ -61,16 +61,6 @@ const skillCards = [
         metricLabel: '商业方案',
         icon: <Lightbulb size={18} />,
         color: 'from-violet-500 to-purple-600',
-    },
-    {
-        id: 'interview',
-        title: '一线访谈洞察',
-        subtitle: '定性研究',
-        description: '深度访谈提炼三大痛点：流程脱节·协作缺失·结果不可信',
-        metric: '+30-50%',
-        metricLabel: '作业时间增加',
-        icon: <Users size={18} />,
-        color: 'from-blue-500 to-indigo-600',
     },
 ]
 
@@ -191,7 +181,7 @@ export function SolutionSkills() {
             </div>
 
             <div className="px-6 pb-6">
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2">
                     {skillCards.map((card) => (
                         <div
                             key={card.id}
