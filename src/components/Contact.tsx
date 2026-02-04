@@ -41,7 +41,7 @@ export default function Contact() {
   }
 
   // 真实电话号码（此处通过硬编码还原，以便用户点击复制时能获取到真实号码）
-  const realPhone = '15222280915'
+  const realPhone = '13390916038'
 
   return (
     <>
@@ -93,7 +93,7 @@ export default function Contact() {
               <Phone size={20} />
             </div>
             <div className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-1">Phone</div>
-            <div className="text-sm font-semibold text-foreground">152 **** 0915</div>
+            <div className="text-sm font-semibold text-foreground">133 **** 6038</div>
           </div>
 
           <div className="flex items-center gap-3 mt-6">

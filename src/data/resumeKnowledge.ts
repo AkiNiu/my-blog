@@ -108,7 +108,7 @@ export const resumeKnowledge = {
     hobbies: ['研究AI工具', '组装电脑', '阅读科技资讯', '探索效率工具'],
   },
   contact: {
-    phone: '152****0915',
+    phone: '133****6038',
     email: 'akihope4love@gmail.com',
     github: 'https://github.com/AkiNiu',
   },
