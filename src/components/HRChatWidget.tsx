@@ -31,6 +31,7 @@ export default function HRChatWidget() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [redactContact, setRedactContact] = useState(true)
+  const [isNearBottom, setIsNearBottom] = useState(true) // 智能滚动状态
   const [items, setItems] = useState<ChatItem[]>(() => {
     const raw = localStorage.getItem('hr_chat_items')
     const parsed = raw ? safeJsonParse<ChatItem[]>(raw) : null
@@ -39,7 +40,7 @@ export default function HRChatWidget() {
       {
         id: uid(),
         role: 'assistant',
-        content: '你好，我是“刘生杰”的简历助手。你可以直接问我关于经历/项目/成果/技能/匹配度的问题。',
+        content: '你好，我是"刘生杰"的简历助手。你可以直接问我关于经历/项目/成果/技能/匹配度的问题。',
       },
     ]
   })
@@ -48,11 +49,10 @@ export default function HRChatWidget() {
 
   const suggested = useMemo(
     () => [
-      '请用 5 条要点总结候选人优势',
-      '候选人做过哪些 AI 相关项目？分别负责什么？',
-      '请基于“AI 产品经理”岗位给出匹配点与风险点',
-      '检E通 3.0 的多模态诊断方案怎么做？',
-      '有哪些可量化的产出与成果？',
+      '总结候选人优势',
+      '做过哪些AI项目？',
+      '匹配度分析',
+      '可量化的成果',
     ],
     [],
   )
@@ -61,13 +61,23 @@ export default function HRChatWidget() {
     localStorage.setItem('hr_chat_items', JSON.stringify(items.slice(-60)))
   }, [items])
 
+  // 监听滚动位置，判断是否接近底部
+  const handleScroll = () => {
+    if (!listRef.current) return
+    const { scrollTop, scrollHeight, clientHeight } = listRef.current
+    // 如果离底部不超过 80px，认为是"接近底部"
+    setIsNearBottom(scrollHeight - scrollTop - clientHeight < 80)
+  }
+
+  // 智能滚动：仅当用户接近底部时才自动滚动
   useEffect(() => {
     if (!open) return
+    if (!isNearBottom) return // 用户在查看历史消息，不强制滚动
     const t = window.setTimeout(() => {
       listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
-    }, 30)
+    }, 50)
     return () => window.clearTimeout(t)
-  }, [open, items, loading])
+  }, [open, items, loading, isNearBottom])
 
   async function send(text: string) {
     const question = text.trim()
@@ -75,6 +85,7 @@ export default function HRChatWidget() {
 
     setError(null)
     setLoading(true)
+    setIsNearBottom(true) // 发送新消息时，自动滚动到底部
 
     const userItem: ChatItem = { id: uid(), role: 'user', content: question }
     setItems((prev) => [...prev, userItem])
@@ -101,6 +112,7 @@ export default function HRChatWidget() {
         const reader = resp.body?.getReader()
         const decoder = new TextDecoder('utf-8')
         let buffer = ''
+        let hasContent = false
         if (!reader) throw new Error('流式通道不可用')
         while (true) {
           const { done, value } = await reader.read()
@@ -118,6 +130,7 @@ export default function HRChatWidget() {
                 throw new Error(obj.error || '请求失败')
               }
               if (obj.delta) {
+                hasContent = true
                 setItems((prev) =>
                   prev.map((it) => (it.id === assistantId ? { ...it, content: it.content + obj.delta! } : it)),
                 )
@@ -127,6 +140,13 @@ export default function HRChatWidget() {
               }
             }
           }
+        }
+        // 如果流式结束后没有内容，回退到 Mock
+        if (!hasContent) {
+          const mockReply = buildMockAnswer(question, redactContact)
+          setItems((prev) =>
+            prev.map((it) => (it.id === assistantId ? { ...it, content: mockReply } : it)),
+          )
         }
       } else {
         const data = await resp.json().catch(() => ({}))
@@ -139,11 +159,10 @@ export default function HRChatWidget() {
         setItems((prev) => [...prev, { id: uid(), role: 'assistant', content: reply }])
       }
     } catch (e: any) {
-      setError(e?.message || '请求失败')
-      setItems((prev) => [
-        ...prev,
-        { id: uid(), role: 'assistant', content: '当前 AI 服务不可用。你可以稍后重试，或先下载 PDF 简历查看。' },
-      ])
+      // API 失败时，自动回退到 Mock 模式
+      console.warn('[HRChat] API 请求失败，回退到 Mock 模式:', e?.message)
+      const mockReply = buildMockAnswer(question, redactContact)
+      setItems((prev) => [...prev, { id: uid(), role: 'assistant', content: mockReply }])
     } finally {
       setLoading(false)
     }
@@ -159,17 +178,19 @@ export default function HRChatWidget() {
       {
         id: uid(),
         role: 'assistant',
-        content: '你好，我是“刘生杰”的简历助手。你可以直接问我关于经历/项目/成果/技能/匹配度的问题。',
+        content: '你好，我是"刘生杰"的简历助手。你可以直接问我关于经历/项目/成果/技能/匹配度的问题。',
       },
     ])
     setError(null)
+    setIsNearBottom(true)
   }
 
   return (
     <div className="fixed bottom-5 right-5 z-50">
       {open ? (
-        <div className="w-[360px] max-w-[calc(100vw-2.5rem)] rounded-2xl border border-border bg-card shadow-2xl ring-1 ring-black/5">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+        <div className="w-[360px] max-w-[calc(100vw-2.5rem)] rounded-2xl border border-border bg-card shadow-2xl ring-1 ring-black/5 flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
                 <Bot size={18} />
@@ -199,36 +220,39 @@ export default function HRChatWidget() {
             </div>
           </div>
 
-          <div className="px-4 py-2 border-b border-border flex items-center justify-between gap-3 bg-secondary/20">
+          {/* Redact Toggle */}
+          <div className="px-4 py-2 border-b border-border flex items-center justify-between gap-3 bg-secondary/20 shrink-0">
             <div className="text-xs text-muted-foreground flex items-center gap-2">
               <Sparkles size={14} />
               <span>脱敏联系方式 / Redact</span>
             </div>
             <button
               onClick={() => setRedactContact((v) => !v)}
-              className={`h-6 w-10 rounded-full transition-colors ${
-                redactContact ? 'bg-primary' : 'bg-muted'
-              }`}
+              className={`h-6 w-10 rounded-full transition-colors ${redactContact ? 'bg-primary' : 'bg-muted'
+                }`}
               aria-label="Toggle redact"
               type="button"
             >
               <span
-                className={`block h-4 w-4 rounded-full bg-white shadow transition-transform ${
-                  redactContact ? 'translate-x-5' : 'translate-x-1'
-                }`}
+                className={`block h-4 w-4 rounded-full bg-white shadow transition-transform ${redactContact ? 'translate-x-5' : 'translate-x-1'
+                  }`}
               />
             </button>
           </div>
 
-          <div ref={listRef} className="h-[360px] overflow-y-auto px-4 py-3 space-y-4 bg-background/50">
+          {/* 消息列表 - 高度调整，不包含预设问题 */}
+          <div
+            ref={listRef}
+            onScroll={handleScroll}
+            className="h-[280px] overflow-y-auto px-4 py-3 space-y-4 bg-background/50"
+          >
             {items.map((m) => (
               <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div
-                  className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm ${
-                    m.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-card border border-border text-foreground'
-                  }`}
+                  className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm ${m.role === 'user'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-card border border-border text-foreground'
+                    }`}
                 >
                   {m.content}
                 </div>
@@ -257,25 +281,28 @@ export default function HRChatWidget() {
                 </button>
               </div>
             ) : null}
+          </div>
 
-            <div className="pt-2">
-              <div className="flex flex-wrap gap-2">
-                {suggested.map((q) => (
-                  <button
-                    key={q}
-                    onClick={() => send(q)}
-                    className="text-xs px-3 py-1.5 rounded-full border border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-                    type="button"
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
+          {/* 预设问题 - 固定区域，不随消息滚动 */}
+          <div className="px-3 py-2 border-t border-border bg-secondary/10 shrink-0">
+            <div className="flex flex-wrap gap-1.5">
+              {suggested.map((q) => (
+                <button
+                  key={q}
+                  onClick={() => send(q)}
+                  disabled={loading}
+                  className="text-xs px-2.5 py-1 rounded-full border border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors disabled:opacity-50"
+                  type="button"
+                >
+                  {q}
+                </button>
+              ))}
             </div>
           </div>
 
+          {/* 输入框 */}
           <form
-            className="p-3 border-t border-border bg-card flex items-center gap-2 rounded-b-2xl"
+            className="p-3 border-t border-border bg-card flex items-center gap-2 rounded-b-2xl shrink-0"
             onSubmit={(e) => {
               e.preventDefault()
               send(input)

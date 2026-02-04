@@ -1,6 +1,8 @@
-const fs = require('fs')
-const path = require('path')
-let pdfParse
+import fs from 'fs';
+import path from 'path';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { PDFParse } = require('pdf-parse');
 
 async function main() {
     const inputPath = process.argv[2]
@@ -9,27 +11,33 @@ async function main() {
         console.error('用法: node tools/pdf_to_md.js <input.pdf> [output.md]')
         process.exit(1)
     }
-    if (!pdfParse) {
-        const m = await import('pdf-parse')
-        pdfParse = m.default || m.pdfParse || m
-    }
+
     const absInput = path.resolve(inputPath)
     if (!fs.existsSync(absInput)) {
         console.error(`找不到文件: ${absInput}`)
         process.exit(1)
     }
+
     const buffer = fs.readFileSync(absInput)
-    const data = await pdfParse(buffer)
+    const parser = new PDFParse({ data: buffer });
+
+    // Get info
+    const infoResult = await parser.getInfo();
+
+    // Get text
+    const textResult = await parser.getText();
+
+    await parser.destroy();
+
     const baseName = path.basename(absInput, path.extname(absInput))
     const outPath = path.resolve(outputPathArg || path.join(path.dirname(absInput), `${baseName}.md`))
 
-    const lines = normalizeText(data.text)
+    const lines = normalizeText(textResult.text)
     const md = buildMarkdown({
         title: baseName,
         source: absInput,
-        numpages: data.numpages,
-        info: data.info || {},
-        metadata: data.metadata || {},
+        numpages: infoResult.total,
+        info: infoResult.info || {},
         lines
     })
     fs.writeFileSync(outPath, md, 'utf8')
@@ -47,12 +55,12 @@ function normalizeText(text) {
     return lines
 }
 
-function buildMarkdown({ title, source, numpages, info, metadata, lines }) {
+function buildMarkdown({ title, source, numpages, info, lines }) {
     const header = [
         `# ${title}`,
         '',
         `- 来源文件: \`${source}\``,
-        `- 页数: ${numpages}`,
+        `- 页数: ${numpages || '未知'}`,
     ]
     if (info && (info.Producer || info.CreationDate || info.Author || info.Title)) {
         header.push('', '**PDF元信息**')
@@ -61,7 +69,7 @@ function buildMarkdown({ title, source, numpages, info, metadata, lines }) {
         if (info.Producer) header.push(`- 生成器: ${info.Producer}`)
         if (info.CreationDate) header.push(`- 创建时间: ${info.CreationDate}`)
     }
-    const body = ['','**全文内容**','']
+    const body = ['', '**全文内容**', '']
     for (const s of lines) {
         body.push(s)
     }
@@ -72,4 +80,3 @@ main().catch(err => {
     console.error(err)
     process.exit(1)
 })
-

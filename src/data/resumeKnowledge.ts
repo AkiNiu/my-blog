@@ -63,6 +63,19 @@ export type ResumeMaterial = {
   url?: string
 }
 
+export type ResumePersonality = {
+  mbti: string
+  traits: string[]
+  aiJourney: string[]
+  hobbies: string[]
+  workHabits: {
+    morning: string
+    workload: string
+    origin: string
+    stressResistance: string
+  }
+}
+
 export const resumeKnowledge = {
   profile: {
     name: 'AkiLiu',
@@ -71,10 +84,33 @@ export const resumeKnowledge = {
     extra: '211 硕士（东华大学）· 复杂系统与数据分析 · 全栈落地能力',
     pitch: '擅长用工程思维拆解复杂 B 端业务，将 AI 技术转化为可落地的商业价值。不只是定义功能，更交付可量化的效率提升与极佳的用户体验。相比于堆砌技术概念，我更关注如何让 Agentic Workflow 真正为业务降本增效。',
   },
+  // 个人特质 - 供HR更全面了解候选人
+  personality: {
+    mbti: 'INTJ',
+    traits: [
+      '热爱学习新工具，持续关注 AI/科技行业动态',
+      '崇尚专业与技术，追求极致的工程思维',
+      '极客风格：能自己组装电脑、熟练使用各类软件工具',
+      '拥抱变化：在 AI 浪潮中始终保持好奇与行动力',
+    ],
+    workHabits: {
+      morning: '每天6点起床，7点到公司，9点上班前进行1-2小时自主学习',
+      workload: '日均工作时长10小时以上，工作投入度高',
+      stressResistance: '极强抗压能力：习惯高强度研发节奏，能同时并行处理多个项目',
+      origin: '硕士期间养成的早起与自律习惯，一直保持至今',
+    },
+    aiJourney: [
+      '2023年1月：ChatGPT 发布后两个月即成为第一批用户',
+      '科研期间：深度使用文本生成能力辅助论文写作与数据分析',
+      '自学路径：从 Prompt Engineering 到机器学习、深度学习入门',
+      '广泛体验：OpenAI GPT系列、Google Gemini、xAI Grok、多模态模型等',
+    ],
+    hobbies: ['研究AI工具', '组装电脑', '阅读科技资讯', '探索效率工具'],
+  },
   contact: {
     phone: '152****0915',
     email: 'akihope4love@gmail.com',
-    github: 'https://github.com/yourname',
+    github: 'https://github.com/AkiNiu',
   },
   preferences: {
     targetRoles: ['AI产品经理', '数据产品经理', '智能化产品经理'],
@@ -271,6 +307,13 @@ export const resumePromptContext = `
 - 方向：${resumeKnowledge.profile.headline}
 - 城市：${resumeKnowledge.profile.location}
 - 亮点：AI Native 产品思维、技术理解与沟通、全栈产品能力、复杂系统建模
+
+个人特质：
+- MBTI：${resumeKnowledge.personality.mbti}（理性、独立、追求效率）
+- 性格：${resumeKnowledge.personality.traits.join('；')}
+- 爱好：${resumeKnowledge.personality.hobbies.join('、')}
+- AI经历：${resumeKnowledge.personality.aiJourney.join('；')}
+- 工作习惯：${resumeKnowledge.personality.workHabits.morning}；${resumeKnowledge.personality.workHabits.workload}；${resumeKnowledge.personality.workHabits.stressResistance}
 
 求职偏好：
 - 意向岗位：${resumeKnowledge.preferences.targetRoles.join(' / ')}
